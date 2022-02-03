@@ -7,7 +7,7 @@ import (
 	"github.com/spf13/pflag"
 	"k8s.io/cli-runtime/pkg/genericclioptions"
 
-	top_requests "github.com/mfojtik/oc-adm-top-requests/pkg/cmd/top-requests"
+	requests "github.com/mfojtik/oc-adm-apiserver/pkg/cmd/requests"
 )
 
 type Options struct {
@@ -16,11 +16,11 @@ type Options struct {
 	genericclioptions.IOStreams
 }
 
-func NewCmdTopRequests(streams genericclioptions.IOStreams) *cobra.Command {
+func NewCmdApiserver(streams genericclioptions.IOStreams) *cobra.Command {
 	o := &Options{IOStreams: streams}
 
 	cmd := &cobra.Command{
-		Use:          "top-requests",
+		Use:          "apiserver",
 		SilenceUsage: true,
 		RunE: func(c *cobra.Command, args []string) error {
 			if err := o.Complete(c, args); err != nil {
@@ -37,7 +37,7 @@ func NewCmdTopRequests(streams genericclioptions.IOStreams) *cobra.Command {
 		},
 	}
 
-	cmd.AddCommand(top_requests.NewCmdTopRequests(streams))
+	cmd.AddCommand(requests.NewCmdTopRequests(streams))
 
 	return cmd
 }
@@ -58,7 +58,7 @@ func main() {
 	flags := pflag.NewFlagSet("dev-helpers", pflag.ExitOnError)
 	pflag.CommandLine = flags
 
-	root := NewCmdTopRequests(genericclioptions.IOStreams{In: os.Stdin, Out: os.Stdout, ErrOut: os.Stderr})
+	root := NewCmdApiserver(genericclioptions.IOStreams{In: os.Stdin, Out: os.Stdout, ErrOut: os.Stderr})
 	if err := root.Execute(); err != nil {
 		os.Exit(1)
 	}
